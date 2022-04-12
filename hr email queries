@@ -1,7 +1,7 @@
 -- Using the hr database 
 --1. Display the id, first name in lowercase and last name in uppercase,
 --for all employees whose employee number is in the range between 80 and 150.
---use [hr]
+--use [hr] 
 
 select ID, lower(first_name),upper(last_name)
 from Employees
