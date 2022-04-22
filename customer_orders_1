@@ -1,0 +1,53 @@
+--Written usig SQLite for database BIT_DB
+--How many orders were placed in January?
+
+select count(orderid) from BIT_DB.JanSales
+
+--How many of those orders were for an iPhone?
+
+select count(orderid) from BIT_DB.JanSales 
+where Product = "iPhone" 
+
+--Select the customer account numbers for all the orders that were placed in February.
+
+Select * 
+from BIT_DB.FebSales FS 
+INNER JOIN BIT_DB.customers C
+ON C.order_id = FS.orderid
+
+--Which product was the cheapest one sold in January, and what was the price?
+
+Select distinct Min(price), Product
+from BIT_DB.JanSales
+GROUP BY Product,price 
+ORDER BY price ASC 
+
+--What is the total revenue for each product sold in January? (Revenue can be calculated using the number of products sold and the price of the products).
+
+select Product,
+price, 
+sum(Quantity) AS 'total_quantity sold',
+sum(Quantity)*price AS 'total_revenue'
+from BIT_DB.JanSales 
+GROUP BY Product 
+ORDER BY total_revenue DESC
+
+--Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+
+select Product,
+price, 
+sum(Quantity) AS 'total_quantity sold',
+sum(Quantity)*price AS 'total_revenue',
+location
+from BIT_DB.FebSales 
+GROUP BY Product,location
+HAVING location = '548 Lincoln St, Seattle, WA 98101' 
+
+--How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers? 
+
+select COUNT(C.acctnum), 
+AVG(FS.Quantity)*FS.price as 'avg_spent'
+from BIT_DB.FebSales FS
+LEFT JOIN BIT_DB.customers C
+ON FS.orderid = C.order_id
+where FS.Quantity > 2
